@@ -4,10 +4,12 @@ package com.techelevator.tenmo.services;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.NumberFormat;
 import java.util.Scanner;
 
 public class ConsoleService {
 
+	private NumberFormat currency = NumberFormat.getCurrencyInstance();
 	private PrintWriter out;
 	private Scanner in;
 
@@ -97,4 +99,10 @@ public class ConsoleService {
 		} while(result == null);
 		return result;
 	}
+
+	public void displayAccountBalance(double balance){
+		System.out.println("Current balance is: " + currency.format(balance));
+	}
+
+
 }

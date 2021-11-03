@@ -4,7 +4,9 @@ import com.techelevator.tenmo.auth.models.AuthenticatedUser;
 import com.techelevator.tenmo.auth.models.UserCredentials;
 import com.techelevator.tenmo.auth.services.AuthenticationService;
 import com.techelevator.tenmo.auth.services.AuthenticationServiceException;
+import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.ConsoleService;
+import io.cucumber.java.bs.A;
 
 public class App {
 
@@ -25,6 +27,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     private AuthenticatedUser currentUser;
     private ConsoleService console;
     private AuthenticationService authenticationService;
+    private AccountService accountService;
 
     public static void main(String[] args) {
     	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
@@ -39,6 +42,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	public void run() {
 		console.showWelcomeBanner();
 		registerAndLogin();
+		accountService = new AccountService(API_BASE_URL, currentUser);
 		mainMenu();
 	}
 
@@ -65,7 +69,9 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewCurrentBalance() {
-		// TODO Auto-generated method stub
+
+		double balance = accountService.getBalance();
+		console.displayAccountBalance(balance);
 		
 	}
 

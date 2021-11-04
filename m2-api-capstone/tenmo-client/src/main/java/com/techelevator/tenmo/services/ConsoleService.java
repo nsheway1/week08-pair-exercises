@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.NumberFormat;
+import java.util.Map;
 import java.util.Scanner;
 
 public class ConsoleService {
@@ -102,6 +103,34 @@ public class ConsoleService {
 
 	public void displayAccountBalance(double balance){
 		System.out.println("Current balance is: " + currency.format(balance));
+	}
+
+	public Long displayAvailableUsersAndGetUserToTransferTo(Map<Long, String> availableUsers){
+		System.out.println("-----------------------------");
+		System.out.println("User's");
+		System.out.printf("%-8s %-30s %n", "ID", "Name");
+		System.out.println("-----------------------------");
+		for(Map.Entry<Long, String> entry : availableUsers.entrySet()){
+			System.out.printf("%-8s %-30s %n", entry.getKey(), entry.getValue());
+		}
+		System.out.println("-----------------------------");
+		System.out.println("Enter ID of the user you are sending to (0 to cancel):");
+		return in.nextLong();
+	}
+
+	public double askUserHowMuchToTransfer(){
+		System.out.println("Enter amount:");
+		return in.nextDouble();
+	}
+
+	public void displayTransferSuccess(){
+		System.out.println();
+		System.out.println("Transfer successful.");
+	}
+
+	public void insufficientFundsMessage(){
+		System.out.println();
+		System.out.println("Insufficient funds. Transfer cancelled.");
 	}
 
 

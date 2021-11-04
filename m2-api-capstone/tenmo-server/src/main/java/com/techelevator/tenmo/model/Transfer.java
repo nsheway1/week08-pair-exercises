@@ -1,5 +1,7 @@
 package com.techelevator.tenmo.model;
 
+import java.util.Objects;
+
 public class Transfer {
 
     private Long transferId;
@@ -55,5 +57,18 @@ public class Transfer {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transfer transfer = (Transfer) o;
+        return Double.compare(transfer.amount, amount) == 0 && Objects.equals(transferId, transfer.transferId) && Objects.equals(transferTypeId, transfer.transferTypeId) && Objects.equals(transferStatusId, transfer.transferStatusId) && Objects.equals(accountFrom, transfer.accountFrom) && Objects.equals(accountTo, transfer.accountTo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(transferId, transferTypeId, transferStatusId, accountFrom, accountTo, amount);
     }
 }

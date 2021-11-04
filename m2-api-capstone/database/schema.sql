@@ -99,3 +99,12 @@ INSERT INTO transfer_types (transfer_type_desc) VALUES ('Request');
 INSERT INTO transfer_types (transfer_type_desc) VALUES ('Send');
 
 COMMIT TRANSACTION;
+
+
+
+
+
+
+SELECT balance FROM accounts WHERE user_id = ?;
+
+SELECT user_id, username FROM users;

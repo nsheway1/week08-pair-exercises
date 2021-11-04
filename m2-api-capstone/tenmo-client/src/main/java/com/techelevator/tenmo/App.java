@@ -4,9 +4,12 @@ import com.techelevator.tenmo.auth.models.AuthenticatedUser;
 import com.techelevator.tenmo.auth.models.UserCredentials;
 import com.techelevator.tenmo.auth.services.AuthenticationService;
 import com.techelevator.tenmo.auth.services.AuthenticationServiceException;
+import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.ConsoleService;
 import io.cucumber.java.bs.A;
+
+import java.util.Map;
 
 public class App {
 
@@ -86,8 +89,15 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
-		
+		Map<Long, String> availableUsers = accountService.getAvailableUsers();
+		Long receivingUserId = console.displayAvailableUsersAndGetUserToTransferTo(availableUsers);
+		double amountToSend = console.askUserHowMuchToTransfer();
+		Transfer transfer = accountService.createTransfer(receivingUserId, amountToSend);
+		if(transfer == null){
+			console.insufficientFundsMessage();
+		}else {
+			console.displayTransferSuccess();
+		}
 	}
 
 	private void requestBucks() {

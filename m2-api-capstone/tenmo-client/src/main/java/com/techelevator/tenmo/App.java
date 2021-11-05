@@ -46,7 +46,6 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	public void run() {
 		console.showWelcomeBanner();
 		registerAndLogin();
-		accountService = new AccountService(API_BASE_URL, currentUser);
 		mainMenu();
 	}
 
@@ -81,9 +80,24 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void viewTransferHistory() {
 		List<Transfer> transfers = accountService.viewTransfers();
-		console.displayTransfersAndGetUserChoice(transfers, currentUser.getUser().getUsername());
+		Long transferId = console.displayTransfersAndGetUserChoice(transfers, currentUser.getUser().getUsername());
+		if(!transferId.equals(Long.valueOf(0))) {
+			Transfer chosenTransfer = getUserChoiceTransfer(transfers, transferId);
+			if (chosenTransfer == null) {
+				console.invalidInputMessage();
+			} else {
+				console.displayTransferDetails(chosenTransfer);
+			}
+		}
+	}
 
-		
+	private Transfer getUserChoiceTransfer(List<Transfer> transfers, Long transferId){
+    	for(Transfer transfer : transfers){
+    		if(transfer.getTransferId().equals(transferId)){
+    			return transfer;
+			}
+		}
+    	return null;
 	}
 
 	private void viewPendingRequests() {
@@ -94,12 +108,14 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private void sendBucks() {
 		Map<Long, String> availableUsers = accountService.getAvailableUsers();
 		Long receivingUserId = console.displayAvailableUsersAndGetUserToTransferTo(availableUsers);
-		double amountToSend = console.askUserHowMuchToTransfer();
-		Transfer transfer = accountService.createTransfer(receivingUserId, amountToSend);
-		if(transfer == null){
-			console.insufficientFundsMessage();
-		}else {
-			console.displayTransferSuccess();
+		if(!receivingUserId.equals(Long.valueOf(0))) {
+			double amountToSend = console.askUserHowMuchToTransfer();
+			Transfer transfer = accountService.createTransfer(receivingUserId, amountToSend);
+			if (transfer == null) {
+				console.insufficientFundsMessage();
+			} else {
+				console.displayTransferSuccess();
+			}
 		}
 	}
 
@@ -154,6 +170,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			UserCredentials credentials = collectUserCredentials();
 		    try {
 				currentUser = authenticationService.login(credentials);
+				accountService = new AccountService(API_BASE_URL, currentUser);
 			} catch (AuthenticationServiceException e) {
 				console.showLoginFailed(e.getMessage());
 			}

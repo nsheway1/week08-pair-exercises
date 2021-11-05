@@ -13,6 +13,23 @@ public class Transfer {
     private String senderName;
     private String receiverName;
 
+    public String getTypeName(){
+        if(transferTypeId.equals(1)){
+            return "Request";
+        }else {
+            return "Send";
+        }
+    }
+
+    public String getStatusName(){
+        if(transferStatusId.equals(1)){
+            return "Pending";
+        }else if(transferStatusId.equals(2)){
+            return "Approved";
+        }else{
+            return "Rejected";
+        }
+    }
 
     public String getSenderName() {
         return senderName;

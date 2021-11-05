@@ -9,10 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AccountService {
 
@@ -77,9 +74,9 @@ public class AccountService {
 
     public List<Transfer> viewTransfers() {
         HttpEntity entity = new HttpEntity<>(makeAuthHeader());
-        List<Transfer> transfers = restTemplate.exchange(baseUrl+ "/transfers", HttpMethod.GET,
-                entity, List.class).getBody();
-        return transfers;
+        Transfer[] transfers = restTemplate.exchange(baseUrl+ "/transfers", HttpMethod.GET,
+                entity, Transfer[].class).getBody();
+        return Arrays.asList(transfers);
     }
 
 

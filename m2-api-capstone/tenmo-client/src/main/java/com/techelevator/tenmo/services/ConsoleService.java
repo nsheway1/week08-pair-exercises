@@ -118,12 +118,16 @@ public class ConsoleService {
         }
         System.out.println("-----------------------------");
         System.out.println("Enter ID of the user you are sending to (0 to cancel):");
-        return in.nextLong();
+        Long id = in.nextLong();
+        in.nextLine();
+        return id;
     }
 
     public double askUserHowMuchToTransfer() {
         System.out.println("Enter amount:");
-        return in.nextDouble();
+        double transferAmount = in.nextDouble();
+        in.nextLine();
+        return transferAmount;
     }
 
     public void displayTransferSuccess() {
@@ -138,10 +142,10 @@ public class ConsoleService {
 
     public Long displayTransfersAndGetUserChoice(List<Transfer> transfers, String username) {
         System.out.println();
-        System.out.println("-----------------------------");
+        System.out.println("-------------------------------------------------");
         System.out.println("Transfers");
         System.out.printf("%-10s %-30s %-15s %n", "ID", "From/To", "Amount");
-        System.out.println("-----------------------------");
+        System.out.println("-------------------------------------------------");
         for (Transfer transfer : transfers) {
             if (transfer.getSenderName().equals(username)) {
                 System.out.printf("%-10s %-30s %-15s %n", transfer.getTransferId(), "To: " + transfer.getReceiverName(),
@@ -152,7 +156,28 @@ public class ConsoleService {
             }
 
         }
-        return in.nextLong();
+        System.out.println("Please enter transfer ID to view details (0 to cancel): ");
+        Long id = in.nextLong();
+        in.nextLine();
+        return id;
+    }
+
+    public void displayTransferDetails(Transfer transfer){
+        System.out.println();
+        System.out.println("-------------------------------------------------");
+        System.out.println("Transfer Details");
+        System.out.println("-------------------------------------------------");
+        System.out.println("Id: " + transfer.getTransferId());
+        System.out.println("From: " + transfer.getSenderName());
+        System.out.println("To: " + transfer.getReceiverName());
+        System.out.println("Type: " + transfer.getTypeName());
+        System.out.println("Status: " + transfer.getStatusName());
+        System.out.println("Amount: " + currency.format(transfer.getAmount()));
+    }
+
+    public void invalidInputMessage(){
+        System.out.println();
+        System.out.println("Invalid Input. Please try again");
     }
 
 

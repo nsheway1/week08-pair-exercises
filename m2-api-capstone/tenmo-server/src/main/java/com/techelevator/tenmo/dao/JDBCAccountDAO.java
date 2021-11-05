@@ -25,7 +25,7 @@ public class JDBCAccountDAO implements AccountDAO {
     }
 
     public Map<Long, String> getAllUsers() {
-        Map<Long, String> allUsers = new LinkedHashMap<Long, String>();
+        Map<Long, String> allUsers = new HashMap<Long, String>();
         String sql = "SELECT user_id, username FROM users";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
         while (results.next()) {

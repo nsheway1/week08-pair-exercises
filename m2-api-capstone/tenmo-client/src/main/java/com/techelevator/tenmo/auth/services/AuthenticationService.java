@@ -62,7 +62,7 @@ public class AuthenticationService {
 	private String createLoginExceptionMessage(RestClientResponseException ex) {
 		String message = null;
 		if (ex.getRawStatusCode() == 401 && ex.getResponseBodyAsString().length() == 0) {
-		    message = ex.getRawStatusCode() + " : {\"timestamp\":\"" + LocalDateTime.now() + "+00:00\",\"status\":401,\"error\":\"Invalid credentials\",\"message\":\"Login failed: Invalid username or password\",\"path\":\"/login\"}";
+			message = ex.getRawStatusCode() + " : " + "Login failed: Invalid username or password";
 		}
 		else {
 		    message = ex.getRawStatusCode() + " : " + ex.getResponseBodyAsString();
@@ -73,7 +73,7 @@ public class AuthenticationService {
 	private String createRegisterExceptionMessage(RestClientResponseException ex) {
 		String message = null;
 		if (ex.getRawStatusCode() == 400 && ex.getResponseBodyAsString().length() == 0) {
-		    message = ex.getRawStatusCode() + " : {\"timestamp\":\"" + LocalDateTime.now() + "+00:00\",\"status\":400,\"error\":\"Invalid credentials\",\"message\":\"Registration failed: Invalid username or password\",\"path\":\"/register\"}";
+			message = ex.getRawStatusCode() + " : " + "Registration failed: Invalid username or password";
 		}
 		else {
 		    message = ex.getRawStatusCode() + " : " + ex.getResponseBodyAsString();

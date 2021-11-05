@@ -7,8 +7,10 @@ import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.JDBCAccountDAO;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.security.Principal;
@@ -31,7 +33,6 @@ public class AccountController {
     public double getAccountBalance(Principal principal) {
         int userId = userDAO.findIdByUsername(principal.getName());
         double balance = accountDAO.getBalanceByUserId(userId);
-
         return balance;
     }
 

@@ -17,10 +17,9 @@ public class JDBCAccountDAO implements AccountDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Double getBalanceByUserId(int userId) {
+    public Double getBalanceByUserId(int userId){
         String sql = "SELECT balance FROM accounts WHERE user_id = ?";
         Double balance = jdbcTemplate.queryForObject(sql, Double.class, userId);
-
         return balance;
     }
 

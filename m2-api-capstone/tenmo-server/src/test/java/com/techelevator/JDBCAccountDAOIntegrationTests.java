@@ -1,6 +1,5 @@
 package com.techelevator;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.techelevator.tenmo.auth.dao.JdbcUserDAO;
 import com.techelevator.tenmo.auth.dao.UserDAO;
 import com.techelevator.tenmo.auth.model.User;
@@ -56,7 +55,7 @@ public class JDBCAccountDAOIntegrationTests extends DAOIntegrationTest {
 
 
     @Test
-    public void get_balance_by_user_id() {
+    public void get_balance_by_user_id(){
         Double expectedResult = 1000.00;
         int userId = userDAO.findIdByUsername(testUserOne.getUsername());
         Double actualResult = jdbcAccountDAO.getBalanceByUserId(userId);
@@ -64,7 +63,7 @@ public class JDBCAccountDAOIntegrationTests extends DAOIntegrationTest {
     }
 
     @Test
-    public void getAllUsers() {
+    public void get_all_users() {
         Map<Long, String> expectedResult = new LinkedHashMap<Long, String>();
         expectedResult.put(testUserOne.getId(), testUserOne.getUsername());
         expectedResult.put(testUserTwo.getId(), testUserTwo.getUsername());

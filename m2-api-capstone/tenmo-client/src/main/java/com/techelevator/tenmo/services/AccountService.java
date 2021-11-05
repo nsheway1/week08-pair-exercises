@@ -35,11 +35,13 @@ public class AccountService {
         return availableUsers;
     }
 
-    public Transfer createTransfer(Long id, double amount) {
-        if (amount > getBalance()) {
-            return null;
+    public Transfer createTransfer(Long id, double amount, boolean isRequest) {
+        if(!isRequest) {
+            if (amount > getBalance()) {
+                return null;
+            }
         }
-        Transfer transfer = makeNewTransfer(id, amount);
+        Transfer transfer = makeNewTransfer(id, amount, isRequest);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
@@ -47,15 +49,24 @@ public class AccountService {
         return transfer;
     }
 
-    private Transfer makeNewTransfer(Long id, double amount) {
+    private Transfer makeNewTransfer(Long id, double amount, boolean isRequest) {
         Transfer transfer = new Transfer();
-        Account accountTo = getAccount(id);
-        Account accountFrom = getAccount(Long.valueOf(currentUser.getUser().getId()));
+        Account accountTo;
+        Account accountFrom;
+        if(isRequest){
+            accountTo = getAccount(Long.valueOf(currentUser.getUser().getId()));
+            accountFrom = getAccount(id);
+            transfer.setTransferTypeId(Long.valueOf(1));
+            transfer.setTransferStatusId(Long.valueOf(1));
+        }else {
+            accountTo = getAccount(id);
+            accountFrom = getAccount(Long.valueOf(currentUser.getUser().getId()));
+            transfer.setTransferTypeId(Long.valueOf(2));
+            transfer.setTransferStatusId(Long.valueOf(2));
+        }
         transfer.setAccountTo(accountTo.getAccountId());
         transfer.setAmount(amount);
         transfer.setAccountFrom(accountFrom.getAccountId());
-        transfer.setTransferStatusId(Long.valueOf(2));
-        transfer.setTransferTypeId(Long.valueOf(2));
         return transfer;
     }
 

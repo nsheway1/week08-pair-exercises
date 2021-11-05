@@ -72,10 +72,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewCurrentBalance() {
-
 		double balance = accountService.getBalance();
 		console.displayAccountBalance(balance);
-		
 	}
 
 	private void viewTransferHistory() {
@@ -106,11 +104,12 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
+    	boolean isRequest = false;
 		Map<Long, String> availableUsers = accountService.getAvailableUsers();
 		Long receivingUserId = console.displayAvailableUsersAndGetUserToTransferTo(availableUsers);
 		if(!receivingUserId.equals(Long.valueOf(0))) {
 			double amountToSend = console.askUserHowMuchToTransfer();
-			Transfer transfer = accountService.createTransfer(receivingUserId, amountToSend);
+			Transfer transfer = accountService.createTransfer(receivingUserId, amountToSend, isRequest);
 			if (transfer == null) {
 				console.insufficientFundsMessage();
 			} else {
@@ -120,8 +119,13 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
+    	boolean isRequest = true;
+		Map<Long, String> availableUsers = accountService.getAvailableUsers();
+		Long receivingUserId = console.displayAvailableUsersAndGetUserToTransferTo(availableUsers);
+		if(!receivingUserId.equals(Long.valueOf(0))) {
+			double amountToRequest = console.askUserHowMuchToTransfer();
+			Transfer transfer = accountService.createTransfer(receivingUserId, amountToRequest, isRequest);
+		}
 	}
 	
 	private void exitProgram() {

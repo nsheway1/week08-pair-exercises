@@ -24,7 +24,7 @@ public class AccountService {
 
     public double getBalance() {
         HttpEntity entity = new HttpEntity<>(makeAuthHeader());
-        double balance = restTemplate.exchange(baseUrl + "/account/balance", HttpMethod.GET, entity, Double.class).getBody();
+        double balance = restTemplate.exchange(baseUrl + "/accounts/balance", HttpMethod.GET, entity, Double.class).getBody();
         return balance;
     }
 
@@ -45,7 +45,7 @@ public class AccountService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
-        transfer = restTemplate.postForObject(baseUrl + "/sendTEnmoBucks", entity, Transfer.class);
+        transfer = restTemplate.postForObject(baseUrl + "/transfers", entity, Transfer.class);
         return transfer;
     }
 
@@ -72,7 +72,7 @@ public class AccountService {
 
     private Account getAccount(Long id) {
         HttpEntity entity = new HttpEntity<>(makeAuthHeader());
-        Account account = restTemplate.exchange(baseUrl + "/" + id + "/account", HttpMethod.GET,
+        Account account = restTemplate.exchange(baseUrl + "/accounts/" + id, HttpMethod.GET,
                 entity, Account.class).getBody();
         return account;
     }

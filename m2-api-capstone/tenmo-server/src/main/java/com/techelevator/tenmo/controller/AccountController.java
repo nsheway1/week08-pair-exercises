@@ -29,14 +29,14 @@ public class AccountController {
     }
 
 
-    @RequestMapping(path = "/account/balance", method = RequestMethod.GET)
+    @RequestMapping(path = "/accounts/balance", method = RequestMethod.GET)
     public double getAccountBalance(Principal principal) {
         int userId = userDAO.findIdByUsername(principal.getName());
         double balance = accountDAO.getBalanceByUserId(userId);
         return balance;
     }
 
-    @RequestMapping(path = "/{id}/account", method = RequestMethod.GET)
+    @RequestMapping(path = "/accounts/{id}", method = RequestMethod.GET)
     public Account getAccountByUserId(@PathVariable Long id) {
         Account account = accountDAO.getAccountByUserId(id);
         return account;
@@ -51,7 +51,7 @@ public class AccountController {
         return availableUsers;
     }
 
-    @RequestMapping(path = "/sendTEnmoBucks", method = RequestMethod.POST)
+    @RequestMapping(path = "/transfers", method = RequestMethod.POST)
     public Transfer createTransfer(@RequestBody Transfer transfer) {
         transfer = accountDAO.createTransfer(transfer);
         accountDAO.updateBalances(transfer);

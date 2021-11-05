@@ -1,18 +1,12 @@
 package com.techelevator.tenmo.controller;
 
 
-import com.techelevator.tenmo.auth.dao.JdbcUserDAO;
 import com.techelevator.tenmo.auth.dao.UserDAO;
 import com.techelevator.tenmo.dao.AccountDAO;
-import com.techelevator.tenmo.dao.JDBCAccountDAO;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -54,15 +48,34 @@ public class AccountController {
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)
     public Transfer createTransfer(@RequestBody Transfer transfer) {
         transfer = accountDAO.createTransfer(transfer);
-        accountDAO.updateBalances(transfer);
+        if (transfer.getStatusName().equals("Approved")) {
+            accountDAO.updateBalances(transfer);
+        }
+
         return transfer;
     }
 
-    @RequestMapping(path = "/transfers", method = RequestMethod.GET)
-    public List<Transfer> viewTransfers(Principal principal) {
+    @RequestMapping(path = "/transfers/pastTransfers", method = RequestMethod.GET)
+    public List<Transfer> viewPastTransfers(Principal principal) {
         Long userId = Long.valueOf(userDAO.findIdByUsername(principal.getName()));
-        List<Transfer> transfers = accountDAO.getTransfersByUserId(userId);
+        List<Transfer> transfers = accountDAO.getPastTransfersByUserId(userId);
         return transfers;
     }
 
+    @RequestMapping(path = "/transfers/pendingTransfers", method = RequestMethod.GET)
+    public List<Transfer> viewPendingTransfers(Principal principal) {
+        Long userId = Long.valueOf(userDAO.findIdByUsername(principal.getName()));
+        List<Transfer> transfers = accountDAO.getPendingTransfersByUserId(userId);
+        return transfers;
+    }
+
+    @RequestMapping(path = "/transfers/{id}", method = RequestMethod.PUT)
+    public Transfer updateTransfer(@PathVariable Long id, @RequestBody Transfer transfer){
+        accountDAO.updateTransfer(transfer, id);
+        if(transfer.getStatusName().equals("Approved")){
+            accountDAO.updateBalances(transfer);
+
+        }
+        return transfer;
+    }
 }

@@ -14,5 +14,7 @@ public interface AccountDAO {
     public void updateBalances(Transfer transfer);
     public Account getAccountByAccountID(Long id);
     public Account getAccountByUserId(Long id);
-    public List<Transfer> getTransfersByUserId(Long id);
+    public List<Transfer> getPastTransfersByUserId(Long id);
+    public List<Transfer> getPendingTransfersByUserId(Long id);
+    public void updateTransfer(Transfer transfer, Long id);
 }

@@ -7,8 +7,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.Console;
 import java.util.*;
 
 public class AccountService {
@@ -16,10 +19,12 @@ public class AccountService {
     private RestTemplate restTemplate = new RestTemplate();
     private String baseUrl;
     private AuthenticatedUser currentUser;
+    private ConsoleService console;
 
-    public AccountService(String baseUrl, AuthenticatedUser currentUser) {
+    public AccountService(String baseUrl, AuthenticatedUser currentUser, ConsoleService console) {
         this.baseUrl = baseUrl;
         this.currentUser = currentUser;
+        this.console = console;
     }
 
     public double getBalance() {
@@ -46,6 +51,21 @@ public class AccountService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
         transfer = restTemplate.postForObject(baseUrl + "/transfers", entity, Transfer.class);
+        return transfer;
+    }
+
+    public Transfer updateTransfer (Transfer transfer){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+
+        try {
+            restTemplate.put(baseUrl + "/transfers/" + transfer.getTransferId(), entity);
+        } catch (RestClientResponseException ex) {
+            console.displayMessage(ex.getRawStatusCode() + " : " + ex.getStatusText());
+        } catch (ResourceAccessException ex) {
+            console.displayMessage(ex.getMessage());
+        }
         return transfer;
     }
 
@@ -83,12 +103,17 @@ public class AccountService {
         return headers;
     }
 
-    public List<Transfer> viewTransfers() {
+    public List<Transfer> viewPastTransfers() {
         HttpEntity entity = new HttpEntity<>(makeAuthHeader());
-        Transfer[] transfers = restTemplate.exchange(baseUrl+ "/transfers", HttpMethod.GET,
+        Transfer[] transfers = restTemplate.exchange(baseUrl+ "/transfers/pastTransfers", HttpMethod.GET,
                 entity, Transfer[].class).getBody();
         return Arrays.asList(transfers);
     }
 
-
+    public List<Transfer> viewPendingTransfers(){
+        HttpEntity entity = new HttpEntity<>(makeAuthHeader());
+        Transfer[] transfers = restTemplate.exchange(baseUrl+ "/transfers/pendingTransfers", HttpMethod.GET,
+                entity, Transfer[].class).getBody();
+        return Arrays.asList(transfers);
+    }
 }

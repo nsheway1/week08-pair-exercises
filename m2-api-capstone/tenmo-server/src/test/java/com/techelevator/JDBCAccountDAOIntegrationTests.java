@@ -141,7 +141,7 @@ public class JDBCAccountDAOIntegrationTests extends DAOIntegrationTest {
         List<Transfer> expectedResult = new ArrayList<Transfer>();
         expectedResult.add(testTransfer);
         expectedResult.add(testTransferTwo);
-        List<Transfer> actualResult = jdbcAccountDAO.getTransfersByUserId(testUserOne.getId());
+        List<Transfer> actualResult = jdbcAccountDAO.getPastTransfersByUserId(testUserOne.getId());
 
         Assert.assertEquals(expectedResult, actualResult);
 

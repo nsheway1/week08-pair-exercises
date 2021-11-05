@@ -17,7 +17,7 @@ public class JDBCAccountDAO implements AccountDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Double getBalanceByUserId(int userId){
+    public Double getBalanceByUserId(int userId) {
         String sql = "SELECT balance FROM accounts WHERE user_id = ?";
         Double balance = jdbcTemplate.queryForObject(sql, Double.class, userId);
         return balance;
@@ -76,11 +76,25 @@ public class JDBCAccountDAO implements AccountDAO {
         return account;
     }
 
-    public List<Transfer> getTransfersByUserId(Long id) {
+    public List<Transfer> getPastTransfersByUserId(Long id) {
         List<Transfer> transfers = new ArrayList<Transfer>();
         Account account = getAccountByUserId(id);
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to," +
-                " amount FROM transfers WHERE account_from = ? OR account_to = ?";
+                " amount FROM transfers WHERE account_from = ? OR account_to = ? AND transfer_status_id !=1";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, account.getAccountId(), account.getAccountId());
+        while (results.next()) {
+            Transfer transfer = mapRowToTransfer(results);
+
+            transfers.add(transfer);
+        }
+        return transfers;
+    }
+
+    public List<Transfer> getPendingTransfersByUserId(Long id) {
+        List<Transfer> transfers = new ArrayList<Transfer>();
+        Account account = getAccountByUserId(id);
+        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, " +
+                "account_to, amount FROM transfers WHERE transfer_status_id =1 AND account_from = ? OR account_to = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, account.getAccountId(), account.getAccountId());
         while (results.next()) {
             Transfer transfer = mapRowToTransfer(results);
@@ -107,6 +121,12 @@ public class JDBCAccountDAO implements AccountDAO {
         String sql = "SELECT username FROM users WHERE user_id IN (SELECT user_id From accounts WHERE account_id =?)";
         String username = jdbcTemplate.queryForObject(sql, String.class, id);
         return username;
+
+    }
+
+    public void updateTransfer(Transfer transfer, Long id) {
+        String sql = "UPDATE transfers SET transfer_status_id = ? WHERE transfer_id = ?";
+        jdbcTemplate.update(sql, transfer.getTransferStatusId(), id);
 
     }
 

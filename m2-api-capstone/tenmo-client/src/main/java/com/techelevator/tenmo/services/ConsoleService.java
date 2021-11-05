@@ -140,7 +140,7 @@ public class ConsoleService {
         System.out.println("Insufficient funds. Transfer cancelled.");
     }
 
-    public Long displayTransfersAndGetUserChoice(List<Transfer> transfers, String username) {
+    public void displayTransfers(List<Transfer> transfers, String username) {
         System.out.println();
         System.out.println("-------------------------------------------------");
         System.out.println("Transfers");
@@ -156,13 +156,18 @@ public class ConsoleService {
             }
 
         }
+
+    }
+
+    public Long askUserToSeeTransferDetails() {
+        System.out.println();
         System.out.println("Please enter transfer ID to view details (0 to cancel): ");
         Long id = in.nextLong();
         in.nextLine();
         return id;
     }
 
-    public void displayTransferDetails(Transfer transfer){
+    public void displayTransferDetails(Transfer transfer) {
         System.out.println();
         System.out.println("-------------------------------------------------");
         System.out.println("Transfer Details");
@@ -175,9 +180,30 @@ public class ConsoleService {
         System.out.println("Amount: " + currency.format(transfer.getAmount()));
     }
 
-    public void invalidInputMessage(){
+    public void invalidInputMessage() {
         System.out.println();
         System.out.println("Invalid Input. Please try again");
+    }
+
+    public Long askUserWhichTransferToApproveOrReject() {
+        System.out.println();
+        System.out.println("Please enter transfer ID to approve/reject (0 to cancel):");
+        Long id = in.nextLong();
+        in.nextLine();
+        return id;
+    }
+
+    public int askUserToApproveOrReject(){
+        System.out.println();
+        System.out.println("1: Approve");
+        System.out.println("2: Reject");
+        System.out.println("0: Don't approve or reject");
+        System.out.println("---------------------------");
+        System.out.println("Please choose an option:");
+
+        int userChoice = in.nextInt();
+        in.nextLine();
+        return userChoice;
     }
 
 

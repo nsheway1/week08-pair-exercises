@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,8 +35,8 @@ public class AccountController {
         return balance;
     }
 
-    @RequestMapping(path="/{id}/account", method = RequestMethod.GET)
-    public Account getAccountByUserId(@PathVariable Long id){
+    @RequestMapping(path = "/{id}/account", method = RequestMethod.GET)
+    public Account getAccountByUserId(@PathVariable Long id) {
         Account account = accountDAO.getAccountByUserId(id);
         return account;
     }
@@ -56,5 +57,11 @@ public class AccountController {
         return transfer;
     }
 
+    @RequestMapping(path = "/transfers", method = RequestMethod.GET)
+    public List<Transfer> viewTransfers(Principal principal) {
+        Long userId = Long.valueOf(userDAO.findIdByUsername(principal.getName()));
+        List<Transfer> transfers = accountDAO.getTransfersByUserId(userId);
+        return transfers;
+    }
 
 }

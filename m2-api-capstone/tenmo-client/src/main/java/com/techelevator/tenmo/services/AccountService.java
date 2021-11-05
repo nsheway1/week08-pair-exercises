@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AccountService {
@@ -30,7 +31,7 @@ public class AccountService {
         return balance;
     }
 
-    public Map<Long, String> getAvailableUsers(){
+    public Map<Long, String> getAvailableUsers() {
         HttpEntity entity = new HttpEntity<>(makeAuthHeader());
         Map<Long, String> availableUsers = restTemplate.exchange(baseUrl + "/availableUsers",
                 HttpMethod.GET, entity, Map.class).getBody();
@@ -38,7 +39,7 @@ public class AccountService {
     }
 
     public Transfer createTransfer(Long id, double amount) {
-        if(amount > getBalance()){
+        if (amount > getBalance()) {
             return null;
         }
         Transfer transfer = makeNewTransfer(id, amount);
@@ -49,7 +50,7 @@ public class AccountService {
         return transfer;
     }
 
-    private Transfer makeNewTransfer(Long id, double amount){
+    private Transfer makeNewTransfer(Long id, double amount) {
         Transfer transfer = new Transfer();
         Account accountTo = getAccount(id);
         Account accountFrom = getAccount(Long.valueOf(currentUser.getUser().getId()));
@@ -61,7 +62,7 @@ public class AccountService {
         return transfer;
     }
 
-    private Account getAccount(Long id){
+    private Account getAccount(Long id) {
         HttpEntity entity = new HttpEntity<>(makeAuthHeader());
         Account account = restTemplate.exchange(baseUrl + "/" + id + "/account", HttpMethod.GET,
                 entity, Account.class).getBody();
@@ -72,6 +73,13 @@ public class AccountService {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(currentUser.getToken());
         return headers;
+    }
+
+    public List<Transfer> viewTransfers() {
+        HttpEntity entity = new HttpEntity<>(makeAuthHeader());
+        List<Transfer> transfers = restTemplate.exchange(baseUrl+ "/transfers", HttpMethod.GET,
+                entity, List.class).getBody();
+        return transfers;
     }
 
 

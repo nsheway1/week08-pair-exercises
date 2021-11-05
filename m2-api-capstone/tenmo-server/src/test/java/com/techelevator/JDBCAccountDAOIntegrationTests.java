@@ -125,6 +125,8 @@ public class JDBCAccountDAOIntegrationTests extends DAOIntegrationTest {
         testTransfer.setAmount(500.00);
         testTransfer.setTransferStatusId(Long.valueOf(2));
         testTransfer.setTransferTypeId(Long.valueOf(2));
+        testTransfer.setSenderName(testUserOne.getUsername());
+        testTransfer.setReceiverName(testUserTwo.getUsername());
         testTransfer = jdbcAccountDAO.createTransfer(testTransfer);
 
         Transfer testTransferTwo = new Transfer();
@@ -133,6 +135,8 @@ public class JDBCAccountDAOIntegrationTests extends DAOIntegrationTest {
         testTransferTwo.setAmount(750.00);
         testTransferTwo.setTransferStatusId(Long.valueOf(2));
         testTransferTwo.setTransferTypeId(Long.valueOf(2));
+        testTransferTwo.setSenderName(testUserOne.getUsername());
+        testTransferTwo.setReceiverName(testUserTwo.getUsername());
         testTransferTwo = jdbcAccountDAO.createTransfer(testTransferTwo);
 
         List<Transfer> expectedResult = new ArrayList<Transfer>();

@@ -9,6 +9,7 @@ import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.ConsoleService;
 import io.cucumber.java.bs.A;
 
+import java.util.List;
 import java.util.Map;
 
 public class App {
@@ -79,7 +80,9 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
+		List<Transfer> transfers = accountService.viewTransfers();
+		console.displayTransfersAndGetUserChoice(transfers, currentUser.getUser().getUsername());
+
 		
 	}
 

@@ -45,7 +45,7 @@ public class JDBCAccountDAO implements AccountDAO {
         return transfer;
     }
 
-    public void updateBalances(Transfer transfer){
+    public void updateBalances(Transfer transfer) {
         Account senderAccount = getAccountByAccountID(transfer.getAccountFrom());
         Account receiverAccount = getAccountByAccountID(transfer.getAccountTo());
         String sql = "UPDATE accounts SET balance = ? WHERE account_id = ?";
@@ -53,11 +53,11 @@ public class JDBCAccountDAO implements AccountDAO {
         jdbcTemplate.update(sql, receiverAccount.getAccountBalance() + transfer.getAmount(), transfer.getAccountTo());
     }
 
-    public Account getAccountByAccountID(Long id){
+    public Account getAccountByAccountID(Long id) {
         Account account = new Account();
         String sql = "SELECT account_id, user_id, balance FROM accounts WHERE account_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
-        while(results.next()){
+        while (results.next()) {
             account.setAccountId(results.getLong("account_id"));
             account.setUserId(results.getLong("user_id"));
             account.setAccountBalance(results.getDouble("balance"));
@@ -65,11 +65,11 @@ public class JDBCAccountDAO implements AccountDAO {
         return account;
     }
 
-    public Account getAccountByUserId(Long id){
+    public Account getAccountByUserId(Long id) {
         Account account = new Account();
         String sql = "SELECT account_id, user_id, balance FROM accounts WHERE user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
-        while(results.next()){
+        while (results.next()) {
             account.setAccountId(results.getLong("account_id"));
             account.setUserId(results.getLong("user_id"));
             account.setAccountBalance(results.getDouble("balance"));
@@ -77,20 +77,21 @@ public class JDBCAccountDAO implements AccountDAO {
         return account;
     }
 
-    public List<Transfer> getTransfersByUserId(Long id){
+    public List<Transfer> getTransfersByUserId(Long id) {
         List<Transfer> transfers = new ArrayList<Transfer>();
         Account account = getAccountByUserId(id);
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to," +
                 " amount FROM transfers WHERE account_from = ? OR account_to = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, account.getAccountId(), account.getAccountId());
-        while(results.next()){
+        while (results.next()) {
             Transfer transfer = mapRowToTransfer(results);
+
             transfers.add(transfer);
         }
         return transfers;
     }
 
-    private Transfer mapRowToTransfer(SqlRowSet results){
+    private Transfer mapRowToTransfer(SqlRowSet results) {
         Transfer transfer = new Transfer();
         transfer.setTransferId(results.getLong("transfer_id"));
         transfer.setTransferTypeId(results.getLong("transfer_type_id"));
@@ -98,7 +99,16 @@ public class JDBCAccountDAO implements AccountDAO {
         transfer.setAccountFrom(results.getLong("account_from"));
         transfer.setAccountTo(results.getLong("account_to"));
         transfer.setAmount(results.getDouble("amount"));
+        transfer.setSenderName(getUserNameByAccountId(transfer.getAccountFrom()));
+        transfer.setReceiverName(getUserNameByAccountId(transfer.getAccountTo()));
         return transfer;
+    }
+
+    private String getUserNameByAccountId(Long id) {
+        String sql = "SELECT username FROM users WHERE user_id IN (SELECT user_id From accounts WHERE account_id =?)";
+        String username = jdbcTemplate.queryForObject(sql, String.class, id);
+        return username;
+
     }
 
 }

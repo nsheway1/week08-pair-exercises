@@ -115,8 +115,14 @@ public class App {
     private void approveOrReject(Transfer chosenTransfer) {
         int userChoice = console.askUserToApproveOrReject();
         if (userChoice == 1) {
-            chosenTransfer.setTransferStatusId(Long.valueOf(2));
-
+            if(chosenTransfer.getReceiverName().equals(currentUser.getUser().getUsername())){
+                console.cannotApproveMessage();
+            }else if(accountService.getBalance() < chosenTransfer.getAmount()){
+                console.insufficientFundsMessage();
+            }else{
+                chosenTransfer.setTransferStatusId(Long.valueOf(2));
+                console.displayTransferSuccess();
+            }
         } else if (userChoice == 2){
             chosenTransfer.setTransferStatusId(Long.valueOf(3));
         }

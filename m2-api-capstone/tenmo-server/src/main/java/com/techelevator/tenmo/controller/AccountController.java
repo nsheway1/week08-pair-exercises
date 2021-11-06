@@ -74,7 +74,6 @@ public class AccountController {
         accountDAO.updateTransfer(transfer, id);
         if(transfer.getStatusName().equals("Approved")){
             accountDAO.updateBalances(transfer);
-
         }
         return transfer;
     }

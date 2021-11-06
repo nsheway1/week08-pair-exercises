@@ -14,7 +14,7 @@ public class Transfer {
     private String receiverName;
 
     public String getTypeName(){
-        if(transferTypeId.equals(1)){
+        if(transferTypeId.equals(Long.valueOf(1))){
             return "Request";
         }else {
             return "Send";
@@ -22,9 +22,9 @@ public class Transfer {
     }
 
     public String getStatusName(){
-        if(transferStatusId.equals(1)){
+        if(transferStatusId.equals(Long.valueOf(1))){
             return "Pending";
-        }else if(transferStatusId.equals(2)){
+        }else if(transferStatusId.equals(Long.valueOf(2))){
             return "Approved";
         }else{
             return "Rejected";

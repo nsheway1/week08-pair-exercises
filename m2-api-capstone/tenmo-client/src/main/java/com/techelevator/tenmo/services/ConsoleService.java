@@ -137,7 +137,7 @@ public class ConsoleService {
 
     public void insufficientFundsMessage() {
         System.out.println();
-        System.out.println("Insufficient funds. Transfer cancelled.");
+        System.out.println("Insufficient funds.");
     }
 
     public void displayTransfers(List<Transfer> transfers, String username) {
@@ -204,6 +204,11 @@ public class ConsoleService {
         int userChoice = in.nextInt();
         in.nextLine();
         return userChoice;
+    }
+
+    public void cannotApproveMessage(){
+        System.out.println();
+        System.out.println("You cannot approve your own request. Nice try.");
     }
 
 

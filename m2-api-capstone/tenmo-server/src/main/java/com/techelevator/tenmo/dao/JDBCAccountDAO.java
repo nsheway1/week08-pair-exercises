@@ -80,7 +80,7 @@ public class JDBCAccountDAO implements AccountDAO {
         List<Transfer> transfers = new ArrayList<Transfer>();
         Account account = getAccountByUserId(id);
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to," +
-                " amount FROM transfers WHERE account_from = ? OR account_to = ? AND transfer_status_id !=1";
+                " amount FROM transfers WHERE transfer_status_id !=1 AND (account_from = ? OR account_to = ?)";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, account.getAccountId(), account.getAccountId());
         while (results.next()) {
             Transfer transfer = mapRowToTransfer(results);
@@ -94,7 +94,7 @@ public class JDBCAccountDAO implements AccountDAO {
         List<Transfer> transfers = new ArrayList<Transfer>();
         Account account = getAccountByUserId(id);
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, " +
-                "account_to, amount FROM transfers WHERE transfer_status_id =1 AND account_from = ? OR account_to = ?";
+                "account_to, amount FROM transfers WHERE transfer_status_id =1 AND (account_from = ? OR account_to = ?)";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, account.getAccountId(), account.getAccountId());
         while (results.next()) {
             Transfer transfer = mapRowToTransfer(results);
@@ -127,7 +127,6 @@ public class JDBCAccountDAO implements AccountDAO {
     public void updateTransfer(Transfer transfer, Long id) {
         String sql = "UPDATE transfers SET transfer_status_id = ? WHERE transfer_id = ?";
         jdbcTemplate.update(sql, transfer.getTransferStatusId(), id);
-
     }
 
 }
